@@ -1,0 +1,168 @@
+package tut4.oscar.data.entities;
+
+import java.util.Date;
+
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
+import javax.persistence.Column;
+import javax.persistence.Embedded;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+
+import org.hibernate.annotations.Formula;
+
+import tut3.oscar.data.entities.Address;
+
+@Entity
+@Table(name = "FINANCES_USER")
+public class User3 {
+
+	
+	@Id
+	@GeneratedValue(strategy=GenerationType.IDENTITY)
+	@Column(name = "USER_ID")
+	private Long userId;
+
+	//This creates a bi-directional relationship
+	//between user and credential.
+	//user is a instance field in Credential class.
+	//We establish the bi-directional relationship in the non-owning entity.
+	@OneToOne(mappedBy="user")
+	private Credential2 credential;
+	
+	@Column(name = "FIRST_NAME")
+	private String firstName;
+
+	@Column(name = "LAST_NAME")
+	private String lastName;
+
+	@Column(name = "BIRTH_DATE")
+	private Date birthDate;
+
+	@Column(name = "EMAIL_ADDRESS")
+	private String emailAddress;
+
+	//Mapping composite value
+	@Embedded
+	@AttributeOverrides({@AttributeOverride(name="addressLine1", column=@Column(name="USER_ADDRESS_LINE_1")),
+		@AttributeOverride(name="addressLine2", column=@Column(name="USER_ADDRESS_LINE_2"))})
+	private Address address;
+
+	@Column(name = "LAST_UPDATED_DATE")
+	private Date lastUpdatedDate;
+
+	@Column(name = "LAST_UPDATED_BY")
+	private String lastUpdatedBy;
+
+	@Column(name = "CREATED_DATE", updatable = false)
+	private Date createdDate;
+
+	@Column(name = "CREATED_BY", updatable = false)
+	private String createdBy;
+
+	@Formula("lower(datediff(curdate(), birth_date)/365)")
+	private int age;
+
+	public int getAge() {
+		return age;
+	}
+
+	public Address getAddress() {
+		return address;
+	}
+
+	public void setAddress(Address address) {
+		this.address = address;
+	}
+
+	public void setAge(int age) {
+		this.age = age;
+	}
+
+	public Long getUserId() {
+		return userId;
+	}
+
+	public void setUserId(Long userId) {
+		this.userId = userId;
+	}
+
+	public String getFirstName() {
+		return firstName;
+	}
+
+	public void setFirstName(String firstName) {
+		this.firstName = firstName;
+	}
+
+	public String getLastName() {
+		return lastName;
+	}
+
+	public void setLastName(String lastName) {
+		this.lastName = lastName;
+	}
+
+	public Date getBirthDate() {
+		return birthDate;
+	}
+
+	public void setBirthDate(Date birthDate) {
+		this.birthDate = birthDate;
+	}
+
+	public String getEmailAddress() {
+		return emailAddress;
+	}
+
+	public void setEmailAddress(String emailAddress) {
+		this.emailAddress = emailAddress;
+	}
+
+	public Date getLastUpdatedDate() {
+		return lastUpdatedDate;
+	}
+
+	public void setLastUpdatedDate(Date lastUpdatedDate) {
+		this.lastUpdatedDate = lastUpdatedDate;
+	}
+
+	public String getLastUpdatedBy() {
+		return lastUpdatedBy;
+	}
+
+	public void setLastUpdatedBy(String lastUpdatedBy) {
+		this.lastUpdatedBy = lastUpdatedBy;
+	}
+
+	public Date getCreatedDate() {
+		return createdDate;
+	}
+
+	public void setCreatedDate(Date createdDate) {
+		this.createdDate = createdDate;
+	}
+
+	public String getCreatedBy() {
+		return createdBy;
+	}
+
+	public void setCreatedBy(String createdBy) {
+		this.createdBy = createdBy;
+	}
+
+	public Credential2 getCredential() {
+		return credential;
+	}
+
+	public void setCredential(Credential2 credential) {
+		this.credential = credential;
+	}
+	
+	
+	
+}
