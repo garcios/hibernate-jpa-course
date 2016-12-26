@@ -1,16 +1,30 @@
-package tut6.oscar.data;
+package tut8.oscar.data;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 
 import org.hibernate.Session;
 
 import tut1.oscar.data.HibernateUtil;
-import tut6.oscar.data.entities.Account;
-import tut6.oscar.data.entities.Transaction;
+import tut8.oscar.data.entities.Account;
+import tut8.oscar.data.entities.Address;
+import tut8.oscar.data.entities.Credential;
+import tut8.oscar.data.entities.Transaction;
+import tut8.oscar.data.entities.User;
 
 /**
- * One-to-many bi-directional relationship.
+ * 
+ * Uni-directional One-to-many association.
+ * 
+ * Account can be associated with many Users (joint bank account).
+ * A user can have many accounts.
+ * 
+ * Either entity can be chosen as the owner.
+ * In this example, we choose Account as the owning entity.  
+ * Note that the owning entity will have the @Jointable annotation.
+ * 
+ * 
  * @author Oscar
  *
  */
@@ -23,17 +37,23 @@ public class Application {
 			org.hibernate.Transaction transaction = session.beginTransaction();
 			
 			Account account = createNewAccount();
-			account.getTransactions().add(createNewBeltPurchase(account));
-			account.getTransactions().add(createShoePurchase(account));
+			Account account2 = createNewAccount();
+			User user = createUser();
+			User user2 = createUser();
+			
+			account.getUsers().add(user);
+			account.getUsers().add(user2);
+			account2.getUsers().add(user);
+			account2.getUsers().add(user2);
+			
 			session.save(account);
+			session.save(account2);
 			
 			transaction.commit();
 			
+			Account dbAccount = (Account) session.get(Account.class, account.getAccountId());
+			System.out.println(dbAccount.getUsers().iterator().next().getEmailAddress());
 			
-			Transaction dbTransaction = session.get(Transaction.class
-					   , account.getTransactions().get(0).getTransactionId());
-			
-			System.out.println(dbTransaction.getAccount().getName());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -41,6 +61,41 @@ public class Application {
 			session.close();
 			HibernateUtil.getSessionFactory().close();
 		}
+	}
+
+	private static User createUser() {
+		User user = new User();
+		Address address = createAddress();
+		user.setAddresses(Arrays.asList(new Address[]{createAddress()}));
+		user.setBirthDate(new Date());
+		user.setCreatedBy("Oscar Garcia");
+		user.setCreatedDate(new Date());
+		user.setCredential(createCredential(user));
+		user.setEmailAddress("test@test.com");
+		user.setFirstName("John");
+		user.setLastName("Doe");
+		user.setLastUpdatedBy("system");
+		user.setLastUpdatedDate(new Date());
+		return user;
+	}
+
+	private static Credential createCredential(User user) {
+		Credential credential = new Credential();
+		credential.setUser(user);
+		credential.setUsername("test_username");
+		credential.setPassword("test_password");
+		return credential;
+	}
+
+	private static Address createAddress() {
+		Address address = new Address();
+		address.setAddressLine1("101 Address Line");
+		address.setAddressLine2("102 Address Line");
+		address.setCity("New York");
+		address.setState("PA");
+		address.setZipCode("10000");
+		address.setAddressType("PRIMARY");
+		return address;
 	}
 
 	private static Transaction createNewBeltPurchase(Account account) {
@@ -89,4 +144,6 @@ public class Application {
 		return account;
 	}
 	
-}
+}	
+	
+

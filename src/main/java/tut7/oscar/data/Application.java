@@ -1,4 +1,4 @@
-package tut5.oscar.data;
+package tut7.oscar.data;
 
 import java.math.BigDecimal;
 import java.util.Date;
@@ -6,15 +6,21 @@ import java.util.Date;
 import org.hibernate.Session;
 
 import tut1.oscar.data.HibernateUtil;
-import tut5.oscar.data.entities.Account;
-import tut5.oscar.data.entities.Transaction;
+import tut7.oscar.data.entities.Account;
+import tut7.oscar.data.entities.Budget;
+import tut7.oscar.data.entities.Transaction;
 
-/*
- * One-to-many uni-directional relationship
+
+/**
+ * Using Join table for one-to-may relationship.
+ * 
+ * Budget is the source entity, while Transaction is the target entity.
+ * 
+ * @author Oscar
+ *
  */
 public class Application {
 
-	
 	public static void main(String[] args) {
 		Session session = HibernateUtil.getSessionFactory().openSession();
 		
@@ -22,11 +28,18 @@ public class Application {
 			org.hibernate.Transaction transaction = session.beginTransaction();
 			
 			Account account = createNewAccount();
-			account.getTransactions().add(createNewBeltPurchase());
-			account.getTransactions().add(createShoePurchase());
-			session.save(account);
+
+			Budget budget = new Budget();
+			budget.setGoalAmount(new BigDecimal("10000.00"));
+			budget.setName("Emergency Fund");
+			budget.setPeriod("Yearly");
 			
+			budget.getTransactions().add(createNewBeltPurchase(account));
+			budget.getTransactions().add(createShoePurchase(account));
+			
+			session.save(budget);
 			transaction.commit();
+			
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -36,8 +49,9 @@ public class Application {
 		}
 	}
 
-	private static Transaction createNewBeltPurchase() {
+	private static Transaction createNewBeltPurchase(Account account) {
 		Transaction beltPurchase = new Transaction();
+		beltPurchase.setAccount(account);
 		beltPurchase.setTitle("Dress Belt");
 		beltPurchase.setAmount(new BigDecimal("50.00"));
 		beltPurchase.setClosingBalance(new BigDecimal("0.00"));
@@ -51,8 +65,9 @@ public class Application {
 		return beltPurchase;
 	}
 
-	private static Transaction createShoePurchase() {
+	private static Transaction createShoePurchase(Account account) {
 		Transaction shoePurchase = new Transaction();
+		shoePurchase.setAccount(account);
 		shoePurchase.setTitle("Work Shoes");
 		shoePurchase.setAmount(new BigDecimal("100.00"));
 		shoePurchase.setClosingBalance(new BigDecimal("0.00"));

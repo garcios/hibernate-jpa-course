@@ -9,7 +9,7 @@ import tut1.oscar.data.HibernateUtil;
 import tut3.oscar.data.entities.User;
 import tut4.oscar.data.entities.Credential;
 
-//Uni-directional relationship between Credential and User
+//One-to-one Uni-directional relationship between Credential and User
 public class Application {
 
 	public static void main(String[] args) {

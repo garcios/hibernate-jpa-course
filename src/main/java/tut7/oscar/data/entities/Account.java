@@ -1,4 +1,4 @@
-package tut5.oscar.data.entities;
+package tut7.oscar.data.entities;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
@@ -11,27 +11,20 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="ACCOUNT")
+@Table(name = "ACCOUNT")
 public class Account {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="ACCOUNT_ID")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ACCOUNT_ID")
 	private Long accountId;
 
-	@OneToMany(cascade=CascadeType.ALL)
-	@JoinColumn(name="ACCOUNT_ID", nullable=false)
-	//The nullable attribute is important to be specified as false
-	//for uni-directional relationship so that, hibernate will issue
-	//an update on account_id after inserting the transactions.
-	//Because this is uni-directional, @JoinColumn is placed here.
-	List<Transaction> transactions = new ArrayList<Transaction>();
-	
+	@OneToMany(cascade=CascadeType.ALL, mappedBy="account")
+	List<Transaction> transactions = new ArrayList<>();
 	
 	@Column(name = "NAME")
 	private String name;
@@ -147,6 +140,6 @@ public class Account {
 	public void setTransactions(List<Transaction> transactions) {
 		this.transactions = transactions;
 	}
-	
+
 	
 }

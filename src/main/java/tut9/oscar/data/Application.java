@@ -1,16 +1,23 @@
-package tut6.oscar.data;
+package tut9.oscar.data;
 
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.Date;
 
 import org.hibernate.Session;
 
 import tut1.oscar.data.HibernateUtil;
-import tut6.oscar.data.entities.Account;
-import tut6.oscar.data.entities.Transaction;
+import tut9.oscar.data.entities.Account;
+import tut9.oscar.data.entities.Address;
+import tut9.oscar.data.entities.Transaction;
+
+import tut9.oscar.data.entities.User;
+import tut9.oscar.data.entities.Credential;
 
 /**
- * One-to-many bi-directional relationship.
+ * Bi-directional Many-to-Many relationship.
+ * 
+ * 
  * @author Oscar
  *
  */
@@ -23,17 +30,29 @@ public class Application {
 			org.hibernate.Transaction transaction = session.beginTransaction();
 			
 			Account account = createNewAccount();
-			account.getTransactions().add(createNewBeltPurchase(account));
-			account.getTransactions().add(createShoePurchase(account));
-			session.save(account);
+			Account account2 = createNewAccount();
+			User user = createUser();
+			User user2 = createUser();
+			
+			account.getUsers().add(user);
+			account.getUsers().add(user2);
+			user.getAccounts().add(account);
+			user2.getAccounts().add(account);
+			
+			account2.getUsers().add(user);
+			account2.getUsers().add(user2);
+			user.getAccounts().add(account2);
+			user2.getAccounts().add(account2);
+			
+			
+			session.save(user);
+			session.save(user2);
 			
 			transaction.commit();
 			
+			User dbUser =  session.get(User.class, user.getUserId());
+			System.out.println("********" + dbUser.getAccounts().iterator().next().getName());
 			
-			Transaction dbTransaction = session.get(Transaction.class
-					   , account.getTransactions().get(0).getTransactionId());
-			
-			System.out.println(dbTransaction.getAccount().getName());
 			
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -41,6 +60,41 @@ public class Application {
 			session.close();
 			HibernateUtil.getSessionFactory().close();
 		}
+	}
+
+	private static User createUser() {
+		User user = new User();
+		Address address = createAddress();
+		user.setAddresses(Arrays.asList(new Address[]{createAddress()}));
+		user.setBirthDate(new Date());
+		user.setCreatedBy("Oscar Garcia");
+		user.setCreatedDate(new Date());
+		user.setCredential(createCredential(user));
+		user.setEmailAddress("test@test.com");
+		user.setFirstName("John");
+		user.setLastName("Doe");
+		user.setLastUpdatedBy("system");
+		user.setLastUpdatedDate(new Date());
+		return user;
+	}
+
+	private static Credential createCredential(User user) {
+		Credential credential = new Credential();
+		credential.setUser(user);
+		credential.setUsername("test_username");
+		credential.setPassword("test_password");
+		return credential;
+	}
+
+	private static Address createAddress() {
+		Address address = new Address();
+		address.setAddressLine1("101 Address Line");
+		address.setAddressLine2("102 Address Line");
+		address.setCity("New York");
+		address.setState("PA");
+		address.setZipCode("10000");
+		address.setAddressType("PRIMARY");
+		return address;
 	}
 
 	private static Transaction createNewBeltPurchase(Account account) {
@@ -89,4 +143,7 @@ public class Application {
 		return account;
 	}
 	
-}
+}	
+	
+
+

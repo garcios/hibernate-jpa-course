@@ -1,9 +1,11 @@
-package tut5.oscar.data.entities;
+package tut9.oscar.data.entities;
 
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -12,27 +14,28 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
 @Entity
-@Table(name="ACCOUNT")
+@Table(name = "ACCOUNT")
 public class Account {
 
 	@Id
-	@GeneratedValue(strategy=GenerationType.IDENTITY)
-	@Column(name="ACCOUNT_ID")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "ACCOUNT_ID")
 	private Long accountId;
 
-	@OneToMany(cascade=CascadeType.ALL)
-	@JoinColumn(name="ACCOUNT_ID", nullable=false)
-	//The nullable attribute is important to be specified as false
-	//for uni-directional relationship so that, hibernate will issue
-	//an update on account_id after inserting the transactions.
-	//Because this is uni-directional, @JoinColumn is placed here.
-	List<Transaction> transactions = new ArrayList<Transaction>();
+	@ManyToMany(cascade=CascadeType.ALL)
+	@JoinTable(name="USER_ACCOUNT", joinColumns=@JoinColumn(name="ACCOUNT_ID"), 
+		inverseJoinColumns=@JoinColumn(name="USER_ID"))
+	private Set<User> users = new HashSet<>();
 	
-	
+	@OneToMany(cascade = CascadeType.ALL, mappedBy = "account")
+	List<Transaction> transactions = new ArrayList<>();
+
 	@Column(name = "NAME")
 	private String name;
 
@@ -147,6 +150,15 @@ public class Account {
 	public void setTransactions(List<Transaction> transactions) {
 		this.transactions = transactions;
 	}
-	
+
+	public Set<User> getUsers() {
+		return users;
+	}
+
+	public void setUsers(Set<User> users) {
+		this.users = users;
+	}
+
 	
 }
+
