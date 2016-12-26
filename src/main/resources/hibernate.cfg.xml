@@ -23,19 +23,40 @@
 
 		
 		<mapping class="tut1.oscar.data.entities.User"/>
+
 		<mapping class="tut2.oscar.data.TimeTest"/>
+
 		<mapping class="tut3.oscar.data.entities.Bank"/>
 		<mapping class="tut3.oscar.data.entities.Bank2"/>
 		<mapping class="tut3.oscar.data.entities.User"/>
 		<mapping class="tut3.oscar.data.entities.User2"/>
+
 		<mapping class="tut4.oscar.data.entities.Credential"/>
 		<mapping class="tut4.oscar.data.entities.Credential2"/>
 		<mapping class="tut4.oscar.data.entities.User3"/>
+
 		<mapping class="tut5.oscar.data.entities.Account"/>
 		<mapping class="tut5.oscar.data.entities.Transaction"/>
+
 		<mapping class="tut6.oscar.data.entities.Account"/>
 		<mapping class="tut6.oscar.data.entities.Transaction"/>
+
+		<mapping class="tut7.oscar.data.entities.Account"/>
+		<mapping class="tut7.oscar.data.entities.Transaction"/>
+		<mapping class="tut7.oscar.data.entities.Budget"/>
 		
+		<mapping class="tut8.oscar.data.entities.Account"/>
+		<mapping class="tut8.oscar.data.entities.Address"/>
+		<mapping class="tut8.oscar.data.entities.Credential"/>
+		<mapping class="tut8.oscar.data.entities.Transaction"/>
+		<mapping class="tut8.oscar.data.entities.User"/>
+
+		<mapping class="tut9.oscar.data.entities.Account"/>
+		<mapping class="tut9.oscar.data.entities.Address"/>
+		<mapping class="tut9.oscar.data.entities.Credential"/>
+		<mapping class="tut9.oscar.data.entities.Transaction"/>
+		<mapping class="tut9.oscar.data.entities.User"/>
+
  
     </session-factory>
 
