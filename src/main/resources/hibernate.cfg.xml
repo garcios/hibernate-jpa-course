@@ -64,6 +64,11 @@
 		<mapping class="tut10.oscar.data.entities.Transaction"/>
 		<mapping class="tut10.oscar.data.entities.User"/>
  
+		<mapping class="tut12.oscar.data.entities.Currency"/>
+		<mapping class="tut12.oscar.data.entities.Market"/>
+ 		<mapping class="tut12.oscar.data.entities.UserCredentialView"/>
+ 
+ 
     </session-factory>
 
 </hibernate-configuration>
